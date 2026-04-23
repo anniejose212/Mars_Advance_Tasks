@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>Task1</RootNamespace>
+    <AssemblyName>Task1</AssemblyName>
+  </PropertyGroup>
+
+  <!-- Copy testsettings.json and TestData files to output on build -->
+  <ItemGroup>
+    <None Update="testsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\*.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <!-- NuGet packages -->
+  <ItemGroup>
+    <!-- NUnit -->
+    <PackageReference Include="NUnit" Version="4.1.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+
+    <!-- Selenium -->
+    <PackageReference Include="Selenium.WebDriver" Version="4.20.0" />
+    <PackageReference Include="Selenium.Support" Version="4.20.0" />
+    <PackageReference Include="WebDriverManager" Version="2.17.4" />
+    <PackageReference Include="DotNetSeleniumExtras.WaitHelpers" Version="3.11.0" />
+
+    <!-- ExtentReports -->
+    <PackageReference Include="ExtentReports" Version="5.0.4" />
+
+    <!-- JSON -->
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+</Project>
