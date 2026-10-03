@@ -1,12 +1,10 @@
 // FILE: LoginPage.cs
-// ROLE: Authentication POM — opens Sign In modal, performs login,
-//       and surfaces validation signals.
+// ROLE: Authentication POM — opens Sign In, performs login, surfaces validation/lockout signals.
 
+using Task1.Support;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using Task1.Support;
 using SeleniumExtras.WaitHelpers;
-using System;
 
 namespace Task1.Pages
 {
@@ -15,45 +13,33 @@ namespace Task1.Pages
         private readonly IWebDriver _driver;
         private readonly WebDriverWait _wait;
         private readonly NavigationHelper _nav;
+        public IWebDriver Driver => _driver;
 
-        // ── Locators ─────────────────────────────────────────────────────────
-        private readonly By SignInLink =
-            By.XPath("//a[@class='item' and text()='Sign In']");
+        // Locators
+        private readonly By SignInLink = By.XPath("//a[@class='item' and text()='Sign In']");
+        private readonly By UsernameField = By.CssSelector("input[name='email'][placeholder='Email address']");
+        private readonly By PasswordField = By.CssSelector("input[type='password']");
+        private readonly By LoginButton = By.XPath("//button[normalize-space()='Login']");
+        private readonly By SuccessButton = By.XPath("//button[normalize-space()='Sign Out' ] | //a[normalize-space()='Sign Out' ]");
+        private readonly By PasswordErrorPrompt = By.XPath("//div[text()='Password must be at least 6 characters']");
+        private readonly By EmailErrorPrompt = By.XPath("//div[text()='Please enter a valid email address']");
+        private readonly By ErrorToast = By.XPath("//div[@class='ns-box-inner' and text()='Confirm your email']");
+        private readonly By LockoutMessage = By.XPath("//div[contains(text(),'too many attempts') or contains(text(),'locked')]");
+        private readonly By ActiveDimmer = By.CssSelector("div.ui.page.modals.dimmer.active");
 
-        private readonly By UsernameField =
-            By.CssSelector("input[name='email'][placeholder='Email address']");
-
-        private readonly By PasswordField =
-            By.CssSelector("input[type='password']");
-
-        private readonly By LoginButton =
-            By.XPath("//button[normalize-space()='Login']");
-
-        private readonly By SignOutButton =
-            By.XPath("//button[normalize-space()='Sign Out'] | //a[normalize-space()='Sign Out']");
-
-        private readonly By EmailErrorPrompt =
-            By.XPath("//div[text()='Please enter a valid email address']");
-
-        private readonly By PasswordErrorPrompt =
-            By.XPath("//div[text()='Password must be at least 6 characters']");
-
-        private readonly By ErrorToast =
-            By.XPath("//div[@class='ns-box-inner' and text()='Confirm your email']");
-
-        // ── Constructor ───────────────────────────────────────────────────────
         public LoginPage(IWebDriver driver, NavigationHelper nav)
         {
             _driver = driver;
-            _nav    = nav;
-            _wait   = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(3));
+            _nav = nav;
         }
 
-        // ── Actions ───────────────────────────────────────────────────────────
         public void OpenSignIn()
         {
             _nav.NavigateTo("/");
             _driver.Manage().Window.Maximize();
+
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(ActiveDimmer));
             _wait.Until(ExpectedConditions.ElementToBeClickable(SignInLink)).Click();
         }
 
@@ -76,41 +62,97 @@ namespace Task1.Pages
                 .Until(_ => IsLoggedIn());
         }
 
-        // ── Queries ───────────────────────────────────────────────────────────
-        public bool IsLoggedIn()
+        public string GetSuccessMessage()
         {
-            try { return _driver.FindElements(SignOutButton).Count > 0; }
-            catch { return false; }
+            return _wait.Until(d => d.FindElement(SuccessButton)).Text;
         }
 
         public string GetEmailError()
         {
             try
             {
-                var els = _driver.FindElements(EmailErrorPrompt);
-                return els.Count > 0 && els[0].Displayed ? els[0].Text.Trim() : string.Empty;
+                var list = _driver.FindElements(EmailErrorPrompt);
+                if (list.Count > 0 && list[0].Displayed)
+                    return list[0].Text.Trim();
             }
-            catch { return string.Empty; }
+            catch { }
+            return string.Empty;
         }
 
         public string GetPasswordError()
         {
             try
             {
-                var els = _driver.FindElements(PasswordErrorPrompt);
-                return els.Count > 0 && els[0].Displayed ? els[0].Text.Trim() : string.Empty;
+                var list = _driver.FindElements(PasswordErrorPrompt);
+                if (list.Count > 0 && list[0].Displayed)
+                    return list[0].Text.Trim();
             }
-            catch { return string.Empty; }
+            catch { }
+            return string.Empty;
         }
 
         public string GetPopupError()
         {
             try
             {
-                var els = _driver.FindElements(ErrorToast);
-                return els.Count > 0 && els[0].Displayed ? els[0].Text.Trim() : string.Empty;
+                var list = _driver.FindElements(ErrorToast);
+                if (list.Count > 0 && list[0].Displayed)
+                    return list[0].Text.Trim();
             }
-            catch { return string.Empty; }
+            catch { }
+            return string.Empty;
+        }
+
+        public bool IsLoggedIn()
+        {
+            try
+            {
+                return _driver.FindElements(SuccessButton).Count > 0;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public string TryGetSuccess()
+        {
+            try
+            {
+                var els = _driver.FindElements(SuccessButton);
+                return els.Count > 0 ? els[0].Text : string.Empty;
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+
+        public bool IsLockoutMessageVisible()
+        {
+            try
+            {
+                var elements = _driver.FindElements(LockoutMessage);
+                return elements.Count > 0 && elements[0].Displayed;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public void SignOut()
+        {
+            _wait.Until(ExpectedConditions.ElementToBeClickable(SuccessButton)).Click();
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(SuccessButton));
+        }
+
+        // Sign out the current user, then sign in as another
+        public void LoginAs(string username, string password)
+        {
+            SignOut();
+            OpenSignIn();
+            Login(username, password);
+            WaitUntilLoggedIn();
         }
     }
 }

@@ -1,18 +1,23 @@
 {
   "Browser": {
     "Type": "chrome",
-    "Headless": false,
-    "TimeoutSeconds": 10
+    "Headless": "true",
+    "TimeoutSeconds": 30
   },
   "Environment": {
     "BaseUrl": "http://localhost:5003"
   },
   "Login": {
     "Username": "testingcomp@gmail.com",
+    "Password": "hellomvp"
+  },
+  "SecondLogin": {
+    "Username": "notiftest1@gmail.com",
     "Password": "123456"
   },
   "Report": {
     "Path": "Reports/TestReport.html",
     "Title": "Mars Advanced Task 1 – Test Report"
   }
+
 }

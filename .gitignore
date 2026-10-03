@@ -1,1 +1,17 @@
-".vs/" 
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build output
+bin/
+obj/
+
+# Test output
+Reports/
+Screenshots/
+TestResults/
+
+
+# Copilot
+copilot-instructions.md

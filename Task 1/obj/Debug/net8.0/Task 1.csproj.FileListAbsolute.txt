@@ -1,7 +1,0 @@
-C:\Users\annie\source\repos\Mars_Advance_Tasks\Task 1\Task 1\obj\Debug\net8.0\Task 1.csproj.AssemblyReference.cache
-C:\Users\annie\source\repos\Mars_Advance_Tasks\Task 1\Task 1\obj\Debug\net8.0\Task 1.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\annie\source\repos\Mars_Advance_Tasks\Task 1\Task 1\obj\Debug\net8.0\Task 1.gentestingplatformentrypointinputcache.cache
-C:\Users\annie\source\repos\Mars_Advance_Tasks\Task 1\Task 1\obj\Debug\net8.0\Task 1.genautoregisteredextensionsinputcache.cache
-C:\Users\annie\source\repos\Mars_Advance_Tasks\Task 1\Task 1\obj\Debug\net8.0\Task 1.AssemblyInfoInputs.cache
-C:\Users\annie\source\repos\Mars_Advance_Tasks\Task 1\Task 1\obj\Debug\net8.0\Task 1.AssemblyInfo.cs
-C:\Users\annie\source\repos\Mars_Advance_Tasks\Task 1\Task 1\obj\Debug\net8.0\Task 1.csproj.CoreCompileInputs.cache

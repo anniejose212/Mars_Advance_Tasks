@@ -1,0 +1,166 @@
+{
+  "ValidHourlySkillExchange": {
+    "Title": "Selenium Test Automation Mentoring",
+    "Description": "I help testers build maintainable Selenium frameworks using NUnit and the Page Object Model",
+    "Category": "Software Development",
+    "SubCategory": "Programming",
+    "Tags": [
+      "Selenium",
+      "CSharp",
+      "NUnit"
+    ],
+    "ServiceType": "Hourly",
+    "LocationType": "Online",
+    "SkillTrade": "Skill-exchange",
+    "SkillExchangeTags": [
+      "Photography",
+      "Guitar"
+    ],
+    "Credit": "",
+    "Active": "Active"
+  },
+  "ValidOneOffCredit": {
+    "Title": "Manual Testing Workshop",
+    "Description": "A one off hands on workshop covering test case design and exploratory testing",
+    "Category": "Software Development",
+    "SubCategory": "Programming",
+    "Tags": [
+      "ManualTesting"
+    ],
+    "ServiceType": "One-off",
+    "LocationType": "On-site",
+    "SkillTrade": "Credit",
+    "SkillExchangeTags": [],
+    "Credit": "5",
+    "Active": "Hidden"
+  },
+  "EmptyForm": {
+    "Title": "",
+    "Description": "",
+    "Category": "",
+    "SubCategory": "",
+    "Tags": [],
+    "ServiceType": "",
+    "LocationType": "",
+    "SkillTrade": "",
+    "SkillExchangeTags": [],
+    "Credit": "",
+    "Active": ""
+  },
+  "EmptyTitle": {
+    "Title": "",
+    "Description": "Valid description text",
+    "Category": "Software Development",
+    "SubCategory": "Programming",
+    "Tags": [
+      "Selenium"
+    ],
+    "ServiceType": "Hourly",
+    "LocationType": "Online",
+    "SkillTrade": "Credit",
+    "SkillExchangeTags": [],
+    "Credit": "10",
+    "Active": "Active"
+  },
+  "EmptyDescription": {
+    "Title": "Valid Title",
+    "Description": "",
+    "Category": "Software Development",
+    "SubCategory": "Programming",
+    "Tags": [
+      "Selenium"
+    ],
+    "ServiceType": "Hourly",
+    "LocationType": "Online",
+    "SkillTrade": "Credit",
+    "SkillExchangeTags": [],
+    "Credit": "10",
+    "Active": "Active"
+  },
+  "NoTags": {
+    "Title": "Valid Title",
+    "Description": "Valid description text",
+    "Category": "Software Development",
+    "SubCategory": "Programming",
+    "Tags": [],
+    "ServiceType": "Hourly",
+    "LocationType": "Online",
+    "SkillTrade": "Credit",
+    "SkillExchangeTags": [],
+    "Credit": "10",
+    "Active": "Active"
+  },
+  "SpecialCharsTitle": {
+    "Title": "@#$%^&*()!",
+    "Description": "Valid description text",
+    "Category": "Software Development",
+    "SubCategory": "Programming",
+    "Tags": [
+      "Selenium"
+    ],
+    "ServiceType": "Hourly",
+    "LocationType": "Online",
+    "SkillTrade": "Credit",
+    "SkillExchangeTags": [],
+    "Credit": "10",
+    "Active": "Active"
+  },
+  "SpecialCharsDescription": {
+    "Title": "Valid Title",
+    "Description": "@#$%^&*()!",
+    "Category": "Software Development",
+    "SubCategory": "Programming",
+    "Tags": [
+      "Selenium"
+    ],
+    "ServiceType": "Hourly",
+    "LocationType": "Online",
+    "SkillTrade": "Credit",
+    "SkillExchangeTags": [],
+    "Credit": "10",
+    "Active": "Active"
+  },
+  "XssTitle": {
+    "Title": "<script>alert('xss')</script>",
+    "Description": "Valid description text",
+    "Category": "Software Development",
+    "SubCategory": "Programming",
+    "Tags": [
+      "Security"
+    ],
+    "ServiceType": "Hourly",
+    "LocationType": "Online",
+    "SkillTrade": "Credit",
+    "SkillExchangeTags": [],
+    "Credit": "10",
+    "Active": "Active"
+  },
+  "SqlInjectionDescription": {
+    "Title": "Valid Title",
+    "Description": "' OR '1'='1'; --",
+    "Category": "Software Development",
+    "SubCategory": "Programming",
+    "Tags": [
+      "Security"
+    ],
+    "ServiceType": "Hourly",
+    "LocationType": "Online",
+    "SkillTrade": "Credit",
+    "SkillExchangeTags": [],
+    "Credit": "10",
+    "Active": "Active"
+  },
+  "TitleOverMax": {
+    "Input": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "ExpectedLength": 100
+  },
+  "DescriptionOverMax": {
+    "Input": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "ExpectedLength": 600
+  },
+  "CreditOverMax": {
+    "Input": "11",
+    "ExpectedLength": 1
+  },
+  "ErrorToast": "Please complete the form correctly"
+}
