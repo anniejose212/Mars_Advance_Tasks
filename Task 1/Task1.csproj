@@ -9,6 +9,10 @@
     <AssemblyName>Task1</AssemblyName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Include="TestData\AboutMeData.json" />
+  </ItemGroup>
+
   <!-- Copy testsettings.json and TestData files to output on build -->
   <ItemGroup>
     <None Update="testsettings.json">

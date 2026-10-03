@@ -5,22 +5,23 @@ namespace Task1.Config
 {
     public class TestSettings
     {
-        public BrowserSettings     Browser     { get; set; }
-        public ReportSettings      Report      { get; set; }
+        public BrowserSettings Browser { get; set; }
+        public ReportSettings Report { get; set; }
         public EnvironmentSettings Environment { get; set; }
-        public LoginSettings       Login       { get; set; }
+        public LoginSettings Login { get; set; }
+        public LoginSettings SecondLogin { get; set; }
     }
 
     public class BrowserSettings
     {
-        public string Type           { get; set; }
-        public bool   Headless       { get; set; }
-        public int    TimeoutSeconds { get; set; }
+        public string Type { get; set; }
+        public bool Headless { get; set; }
+        public int TimeoutSeconds { get; set; }
     }
 
     public class ReportSettings
     {
-        public string Path  { get; set; }
+        public string Path { get; set; }
         public string Title { get; set; }
     }
 

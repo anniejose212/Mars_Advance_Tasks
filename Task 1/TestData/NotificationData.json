@@ -1,0 +1,21 @@
+{
+  "Listing": {
+    "Title": "Mars Notification Listing",
+    "Description": "Listing created by the Notification tests",
+    "Category": "Software Development",
+    "SubCategory": "Programming",
+    "Tags": [ "Selenium" ],
+    "ServiceType": "Hourly",
+    "LocationType": "Online",
+    "SkillTrade": "Skill-exchange",
+    "SkillExchangeTags": [ "Photography" ],
+    "Credit": "",
+    "Active": "Active"
+  },
+  "RequestMessage": "I am interested in trading skills with you",
+  "SenderName": "joshmatt",
+  "NotificationText": "You have Pending trade request from",
+  "WithdrawText": "withdraw the skill trade application",
+  "RequestSentToast": "Request sent",
+  "EmptyMessage": "You have no notifications"
+}

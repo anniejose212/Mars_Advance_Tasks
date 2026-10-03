@@ -1,0 +1,55 @@
+{
+  "Add": {
+    "Skill": "C#",
+    "Level": "Expert"
+  },
+  "Update": {
+    "Skill": "JavaScript",
+    "Level": "Beginner",
+    "NewLevel": "Intermediate"
+  },
+  "Delete": {
+    "Skill": "Cypress",
+    "Level": "Beginner"
+  },
+  "MultipleSkills": [
+    {
+      "Skill": "Cypress",
+      "Level": "Beginner"
+    },
+    {
+      "Skill": "Git",
+      "Level": "Intermediate"
+    },
+    {
+      "Skill": "Docker",
+      "Level": "Expert"
+    },
+    {
+      "Skill": "Postman",
+      "Level": "Expert"
+    }
+  ],
+  "Duplicate": {
+    "ExistingSkill": "Selenium",
+    "DuplicateAttempt": "Selenium",
+    "Level": "Expert"
+  },
+  "CaseInsensitiveDuplicate": {
+    "ExistingSkill": "Jira",
+    "DuplicateAttempt": "jira",
+    "Level": "Expert"
+  },
+  "UnsafeInput": {
+    "Skill": "<script>alert(1)</script>",
+    "Level": "Intermediate"
+  },
+  "MassiveNameLength": 10000,
+  "ExpectedToasts": {
+    "Added": "added",
+    "Updated": "updated",
+    "Deleted": "deleted",
+    "Duplicate": "already",
+    "MissingInput": "Please enter skill and experience level"
+  }
+}

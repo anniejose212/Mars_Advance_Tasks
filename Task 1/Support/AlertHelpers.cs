@@ -9,6 +9,7 @@ namespace Task1.Support
 {
     public static class AlertHelpers
     {
+        // Returns the open alert, or null if none appears within the given seconds
         public static IAlert TryGetAlert(this IWebDriver driver, int seconds = 2)
         {
             if (driver == null) return null;
@@ -18,7 +19,7 @@ namespace Task1.Support
             {
                 return wait.Until(d =>
                 {
-                    try   { return d.SwitchTo().Alert(); }
+                    try { return d.SwitchTo().Alert(); }
                     catch (NoAlertPresentException) { return null; }
                 });
             }
@@ -28,11 +29,12 @@ namespace Task1.Support
             }
         }
 
+        // Accepts a leftover alert so it cannot block the next test. Returns true if one was closed.
         public static bool TryDismissAnyAlert(this IWebDriver driver, int seconds = 0)
         {
             if (driver == null) return false;
 
-            var alert = driver.TryGetAlert(seconds > 0 ? seconds : 0);
+            var alert = driver.TryGetAlert(seconds);
             if (alert == null) return false;
 
             try
@@ -41,8 +43,9 @@ namespace Task1.Support
                 alert.Accept();
                 return true;
             }
-            catch
+            catch (WebDriverException)
             {
+                // The alert closed on its own before Accept; nothing left to do
                 return false;
             }
         }

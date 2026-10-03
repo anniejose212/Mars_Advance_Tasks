@@ -1,37 +1,48 @@
 // FILE: Base.cs
-// ROLE: Base test fixture — WebDriver lifecycle, login, ExtentReports, screenshots.
-//       Start: login only. More page objects will be added in later pushes.
+// ROLE: Base class for every test fixture. Starts the browser, logs in, creates the
+//       Extent report node, copies the test's log lines into the report, and saves a
+//       screenshot when a test fails.
+//       Test classes add their own setup and cleanup by overriding BeforeEachTest / AfterEachTest.
 
 using AventStack.ExtentReports;
 using AventStack.ExtentReports.Reporter;
-using Task1.Config;
-using Task1.Pages;
-using Task1.Support;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Firefox;
 using System;
 using System.IO;
 using System.Net;
+using Task1.Config;
+using Task1.Pages;
+using Task1.Pages.Components.Profile;
+using Task1.Support;
 
 namespace Task1.Hooks
 {
     [TestFixture]
-    public class Base : LoggerHelper
+    public abstract class Base
     {
-        // ── Core infrastructure ───────────────────────────────────────────────
+        // =====================================================================
+        // CORE
+        // =====================================================================
         protected IWebDriver Driver;
+
         protected static ExtentReports Extent;
+        private static readonly object _extentLock = new object();
+
+        [ThreadStatic]
         protected static ExtentTest Test;
+
         protected TestSettings Settings;
 
-        // ── Helpers ───────────────────────────────────────────────────────────
+        // =====================================================================
+        // HELPERS AND PAGES
+        // =====================================================================
         protected NavigationHelper Nav;
         protected ToastHelper Toasts;
 
-        // ── Pages ─────────────────────────────────────────────────────────────
         protected LoginPage LoginPage;
+        protected AboutMe AboutMePage;
 
         private static string HtmlSafe(string s) =>
             WebUtility.HtmlEncode(s ?? string.Empty);
@@ -44,29 +55,33 @@ namespace Task1.Hooks
         {
             Settings = JsonFileReader.Load<TestSettings>("testsettings.json");
 
-            // Resolve report path relative to project root
-            var root       = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", ".."));
-            var reportPath = Path.Combine(root, Settings.Report.Path);
-            var reportDir  = Path.GetDirectoryName(reportPath);
-
-            if (!string.IsNullOrEmpty(reportDir))
-                Directory.CreateDirectory(reportDir);
-
-            try
+            lock (_extentLock)
             {
-                var htmlReporter = new ExtentSparkReporter(reportPath);
-                htmlReporter.Config.DocumentTitle = Settings.Report.Title;
-                htmlReporter.Config.ReportName    = Settings.Report.Title;
+                if (Extent != null) return;
 
-                Extent = new ExtentReports();
-                Extent.AttachReporter(htmlReporter);
+                var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", ".."));
+                var reportPath = Path.Combine(root, Settings.Report.Path);
+                var reportDir = Path.GetDirectoryName(reportPath);
 
-                Console.WriteLine($"[INFO] Report path: {reportPath}");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Extent setup failed: {e}");
-                throw;
+                if (!string.IsNullOrEmpty(reportDir))
+                    Directory.CreateDirectory(reportDir);
+
+                try
+                {
+                    var htmlReporter = new ExtentSparkReporter(reportPath);
+                    htmlReporter.Config.DocumentTitle = Settings.Report.Title;
+                    htmlReporter.Config.ReportName = Settings.Report.Title;
+
+                    Extent = new ExtentReports();
+                    Extent.AttachReporter(htmlReporter);
+
+                    Console.WriteLine($"[INFO] Report path: {reportPath}");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Extent setup failed: {e}");
+                    throw;
+                }
             }
         }
 
@@ -76,48 +91,32 @@ namespace Task1.Hooks
         [SetUp]
         public void TestSetup()
         {
-            Driver = CreateWebDriver();
+            // Create the report node first, so a failure in setup is still reported
+            lock (_extentLock)
+            {
+                Test = Extent.CreateTest(HtmlSafe(TestContext.CurrentContext.Test.Name));
+            }
+
+            Driver = DriverFactory.Create(Settings.Browser.Type, Settings.Browser.Headless);
             Driver.Manage().Window.Maximize();
-            Driver.Manage().Timeouts().ImplicitWait =
-                TimeSpan.FromSeconds(Settings.Browser.TimeoutSeconds);
+            Driver.Manage().Timeouts().ImplicitWait = TimeSpan.Zero;
 
-            // ── Helpers & pages ───────────────────────────────────────────────
-            Nav       = new NavigationHelper(Driver, Settings.Environment.BaseUrl);
-            Toasts    = new ToastHelper(Driver);
+            Nav = new NavigationHelper(Driver, Settings.Environment.BaseUrl);
+            Toasts = new ToastHelper(Driver);
+
             LoginPage = new LoginPage(Driver, Nav);
+            AboutMePage = new AboutMe(Driver);
 
-            // ── Login ─────────────────────────────────────────────────────────
             LoginPage.OpenSignIn();
             LoginPage.Login(Settings.Login.Username, Settings.Login.Password);
             LoginPage.WaitUntilLoggedIn();
 
-            // ── Optional per-test preconditions ──────────────────────────────
             BeforeEachTest();
-
-            // ── Extent node for this test ─────────────────────────────────────
-            Test = Extent.CreateTest(HtmlSafe(TestContext.CurrentContext.Test.Name));
         }
 
-        // ── Browser factory ───────────────────────────────────────────────────
-        private IWebDriver CreateWebDriver()
-        {
-            var type = Settings.Browser.Type?.ToLowerInvariant() ?? "chrome";
-
-            if (type == "firefox")
-            {
-                var opts = new FirefoxOptions();
-                if (Settings.Browser.Headless) opts.AddArgument("--headless");
-                return new FirefoxDriver(opts);
-            }
-
-            var ch = new ChromeOptions();
-            if (Settings.Browser.Headless) ch.AddArgument("--headless=new");
-            return new ChromeDriver(ch);
-        }
-
-        // ── Virtual hooks for derived test classes ────────────────────────────
+        // Test classes override these for their own setup and cleanup
         protected virtual void BeforeEachTest() { }
-        protected virtual void AfterEachTest()  { }
+        protected virtual void AfterEachTest() { }
 
         // =====================================================================
         // PER-TEST TEARDOWN
@@ -125,17 +124,16 @@ namespace Task1.Hooks
         [TearDown]
         public void TestTeardown()
         {
-            var result  = TestContext.CurrentContext.Result;
-            var status  = result.Outcome.Status;
+            var result = TestContext.CurrentContext.Result;
+            var status = result.Outcome.Status;
             var message = result.Message;
 
-            Driver.TryDismissAnyAlert();
+            // Driver is null if the browser never started
+            Driver?.TryDismissAnyAlert();
 
             try
             {
-                foreach (var line in GetLogs())
-                    Test.Info(HtmlSafe(line));
-                ClearLogs();
+                WriteTestOutputToReport();
 
                 if (status == NUnit.Framework.Interfaces.TestStatus.Failed)
                 {
@@ -161,6 +159,24 @@ namespace Task1.Hooks
         }
 
         // =====================================================================
+        // REPORT LOGGING
+        // =====================================================================
+
+        // Copies everything the test wrote with TestContext.WriteLine (setup, steps,
+        // assertion messages) into the Extent report, one line per entry
+        private void WriteTestOutputToReport()
+        {
+            string output = TestExecutionContext.CurrentContext.CurrentResult.Output;
+            if (string.IsNullOrWhiteSpace(output)) return;
+
+            foreach (var line in output.Split('\n'))
+            {
+                if (line.Trim() != "")
+                    Test.Info(HtmlSafe(line.Trim()));
+            }
+        }
+
+        // =====================================================================
         // SCREENSHOT
         // =====================================================================
         protected string SaveScreenshot(string testName)
@@ -168,7 +184,7 @@ namespace Task1.Hooks
             try
             {
                 var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", ".."));
-                var dir  = Path.Combine(root, "Screenshots");
+                var dir = Path.Combine(root, "Screenshots");
                 Directory.CreateDirectory(dir);
 
                 var file = Path.Combine(dir,
@@ -205,7 +221,7 @@ namespace Task1.Hooks
             try
             {
                 Extent?.Flush();
-                Console.WriteLine($"[INFO] Report flushed.");
+                Console.WriteLine("[INFO] Report flushed.");
             }
             catch (Exception ex)
             {

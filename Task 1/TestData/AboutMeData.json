@@ -1,0 +1,15 @@
+﻿{
+  "Availability": "Full Time",
+  "Hours": "More than 30hours a week",
+  "EarnTarget": "Between $500 and $1000 per month",
+  "NewFirstName": "Mars",
+  "NewLastName": "Tester",
+  "SuccessToast": "Availability updated",
+  "Defaults": {
+    "Availability": "Part Time",
+    "Hours": "Less than 30hours a week",
+    "EarnTarget": "Less than $500 per month",
+    "FirstName": "testing",
+    "LastName": "comp"
+  }
+}

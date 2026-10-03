@@ -1,0 +1,70 @@
+{
+  "Add": {
+    "Language": "English",
+    "Level": "Fluent"
+  },
+  "Update": {
+    "Language": "Traditional Chinese",
+    "Level": "Conversational",
+    "NewLevel": "Basic"
+  },
+  "Delete": {
+    "Language": "German",
+    "Level": "Basic"
+  },
+  "MultipleLanguages": [
+    {
+      "Language": "Japanese",
+      "Level": "Basic"
+    },
+    {
+      "Language": "Chinese",
+      "Level": "Fluent"
+    }
+  ],
+  "FourLanguages": [
+    {
+      "Language": "English",
+      "Level": "Basic"
+    },
+    {
+      "Language": "French",
+      "Level": "Conversational"
+    },
+    {
+      "Language": "German",
+      "Level": "Native/Bilingual"
+    },
+    {
+      "Language": "Spanish",
+      "Level": "Fluent"
+    }
+  ],
+  "Duplicate": {
+    "ExistingLanguage": "Russian",
+    "DuplicateAttempt": "Russian",
+    "Level": "Fluent"
+  },
+  "CaseInsensitiveDuplicate": {
+    "ExistingLanguage": "Portuguese",
+    "DuplicateAttempt": "portuguese",
+    "Level": "Fluent"
+  },
+  "InvalidLevel": {
+    "Language": "Hindi",
+    "InvalidLevel": "Virtuoso"
+  },
+  "UnsafeInput": {
+    "Language": "<script>alert(1)</script>",
+    "Level": "Fluent"
+  },
+  "MassiveNameLength": 10000,
+  "ExpectedToasts": {
+    "Added": "added",
+    "Updated": "updated",
+    "Deleted": "deleted",
+    "Duplicate": "already",
+    "MissingInput": "Please enter"
+  }
+
+}
